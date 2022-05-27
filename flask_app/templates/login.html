@@ -1,0 +1,93 @@
+<html>
+   <body>
+
+      <!-- The tachkil code snippets -->
+      <input type="button" value="SEND TEXT" onclick="sendTextTachkil()">
+      <input type="text" name="" id="text1">
+      
+      <br><br>
+      <div id='res_div'> </div>
+      <hr>
+
+
+      <!-- taksim aroud -->
+      <input type="button" value="SEND TEXT" onclick="sendTextUltimateAroud()">
+      <input type="text" name="" id="text2">
+      
+      <br><br>
+      <div id='res_div2'> </div>
+      <hr>
+
+
+      <!-- poem generation -->
+      <input type="button" value="GENERATE POEM" onclick="generatePoem()">
+      
+      <br><br>
+      <div id='res_div3'> </div>
+      <hr>
+
+
+
+   </body>
+
+
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+   <script>
+
+      function sendTextTachkil(text){
+         text = document.getElementById('text1').value
+
+         axios.post('tachkil', {
+         params: {
+           text: text
+         }
+         })
+         .then(function (response) {
+            console.log(response.data.predicted);
+            document.getElementById('res_div').innerHTML = response.data.predicted
+         })
+         .catch(function (error) {
+            console.log(error);
+         })
+
+      }
+
+      function sendTextUltimateAroud(){
+         text = document.getElementById('text2').value
+
+         axios.post('ultimateAroud', {
+         params: {
+           text: text
+         }
+         })
+         .then(function (response) {
+            console.log(response);
+            document.getElementById('res_div2').innerHTML = response.data.aroud
+         })
+         .catch(function (error) {
+            console.log(error);
+         })
+
+      }
+
+      function generatePoem(){
+
+         axios.post('poemGeneration', {
+         params: {
+           
+         }
+         })
+         .then(function (response) {
+            console.log(response);
+            document.getElementById('res_div3').innerHTML = response.data
+         })
+         .catch(function (error) {
+            console.log(error);
+         })
+
+      }
+     
+   </script>
+
+   
+</html>
