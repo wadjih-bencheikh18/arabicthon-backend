@@ -37,14 +37,14 @@ def ultimateAroud():
     return res
 
 
-@app.route('/poemGeneration', methods=['POST'])
-def poemGeneration():
-    data = request.get_json()
-    meter = data['params']['meter']
-    rhyme = data['params']['rhyme']
-    lines = data['params']['lines']
-    s = generate_sentence(meter='الكامل', rhyme='ر', max_length=100)
-    return s
+# @app.route('/poemGeneration', methods=['POST'])
+# def poemGeneration():
+#     data = request.get_json()
+#     meter = data['params']['meter']
+#     rhyme = data['params']['rhyme']
+#     lines = data['params']['lines']
+#     s = generate_sentence(meter='الكامل', rhyme='ر', max_length=100)
+#     return s
 
 
 if __name__ == '__main__':
