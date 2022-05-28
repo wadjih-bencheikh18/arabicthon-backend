@@ -5,8 +5,10 @@ sys.path.insert(0, '.')
 from flask import Flask, redirect, url_for, request, render_template
 from flask_cors import CORS
 from tachkil import get_tachkil
+from meter_classificaiton import predict_meter
 from taksim_aroud import get_full_aroud
-# from generation import generate_sentence
+from caption_generation import generate_caption_sentence
+from generation import generate_sentence
 
 
 
@@ -30,8 +32,20 @@ def tachkil():
     for l in line:
         res.append(get_tachkil(l)["predicted"])
 
-    print('\n'.join(res))
     return '\n'.join(res)
+
+
+@app.route('/meter', methods=['POST'])
+def meter():
+    data = request.get_json()
+    line = data['params']['text']
+    res = []  
+    for i in range(len(line) // 2):
+        right = line[i*2].strip()
+        left = line[i*2 + 1].strip()
+        res.append(predict_meter(right, left))
+
+    return {i: res[i] for i in range(len(res))}
 
 
 @app.route('/ultimateAroud', methods=['POST'])
@@ -48,14 +62,24 @@ def ultimateAroud():
     return res
 
 
-# @app.route('/poemGeneration', methods=['POST'])
-# def poemGeneration():
-#     data = request.get_json()
-#     meter = data['params']['meter']
-#     rhyme = data['params']['rhyme']
-#     lines = data['params']['lines']
-#     s = generate_sentence(meter='الكامل', rhyme='ر', max_length=100)
-#     return s
+@app.route('/poemGeneration', methods=['POST'])
+def poemGeneration():
+    data = request.get_json()
+    meter = data['params']['meter']
+    rhyme = data['params']['rhyme']
+    lines = int(data['params']['lines'])
+    sujet = data['params']['sujet']
+    s = generate_sentence(meter, rhyme, lines, start_with=sujet, max_length=100)
+    return s
+
+
+@app.route('/caption', methods=['POST'])
+def caption():
+    data = request.get_json()
+    image = data['params']['image']
+    lines = int(data['params']['lines'])
+    s = generate_caption_sentence(image, lines)
+    return s
 
 
 if __name__ == '__main__':

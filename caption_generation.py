@@ -99,6 +99,13 @@ def generate_caption(url):
     return ar_caption
 
 
+def generate_caption_sentence(url, max_lines):
+    arabe_caption = generate_caption(url)
+    res = generate_sentence(meter='الكامل', rhyme='ر',
+                        max_lines=max_lines, start_with=arabe_caption)
+    return res
+
+    
 arabe_caption = generate_caption('https://www.preventivevet.com/hubfs/Three%20dogs%20playing%20in%20the%20yard%20600%20canva.jpg')
 res = generate_sentence(meter='الكامل', rhyme='ر', start_with=arabe_caption)
 print(res)
