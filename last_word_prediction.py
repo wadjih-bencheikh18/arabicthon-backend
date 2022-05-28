@@ -2,8 +2,7 @@ from generation import generate_sentence
 from helper.helper_functions import get_raw_sentence
 
 
-
-def get_last_word(right, left):
+def get_last_word(right, left,meter, rhyme):
     """
     Generated the last word of the verse given the right part ( Sadr ) and the left part ( AJZ )
     return:
@@ -18,7 +17,7 @@ def get_last_word(right, left):
     s = right + ' _ ' + left
     s = ' * ' + s
 
-    res = generate_sentence(meter='الكامل', rhyme='ر', start_with=s, max_lines=1, max_length=50)
+    res = generate_sentence(meter, rhyme, start_with=s, max_lines=1, max_length=50)
     
     return res
 

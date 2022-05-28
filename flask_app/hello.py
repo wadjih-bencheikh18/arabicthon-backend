@@ -1,3 +1,4 @@
+import base64
 import sys
 import os
 sys.path.insert(0, '.')
@@ -9,7 +10,7 @@ from meter_classificaiton import predict_meter
 from taksim_aroud import get_full_aroud
 from caption_generation import generate_caption_sentence
 from generation import generate_sentence
-
+from last_word_prediction import get_last_word
 
 
 app = Flask(__name__)
@@ -76,11 +77,21 @@ def poemGeneration():
 @app.route('/caption', methods=['POST'])
 def caption():
     data = request.get_json()
-    image = data['params']['image']
+    image = base64.b64decode(data['params']['image'])
     lines = int(data['params']['lines'])
     s = generate_caption_sentence(image, lines)
     return s
 
+
+@app.route('/lastword', methods=['POST'])
+def lastword():
+    data = request.get_json()
+    right = data['params']['right']
+    left = data['params']['left']
+    meter = data['params']['meter']
+    rhyme = data['params']['rhyme']
+    s = get_last_word(right, left, meter, rhyme)
+    return s
 
 if __name__ == '__main__':
     app.run(debug=True)
