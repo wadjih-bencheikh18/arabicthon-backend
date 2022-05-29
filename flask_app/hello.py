@@ -21,7 +21,7 @@ CORS(app)
 # def success(name):
 #    return 'welcome %s' % name
 
-@app.route('/test')
+@app.route('/')
 def home():
     return render_template('login.html')
 
@@ -31,10 +31,16 @@ def tachkil():
     data = request.get_json()
     line = data['params']['text']
     res=[]
+    result = []
     for l in line:
         res.append(get_tachkil(l)["predicted"])
 
-    return '\n'.join(res)
+    for i in range(len(res) // 2):
+        right = res[i*2].strip()
+        left = res[i*2 + 1].strip()
+        result.append(right+"*"+left)
+
+    return '\n'.join(result)
 
 
 @app.route('/meter', methods=['POST'])
@@ -54,7 +60,6 @@ def meter():
 def ultimateAroud():
     data = request.get_json()
     line = data['params']['text']
-
     res = []
     for l in line:
         res.append(get_full_aroud(l))
@@ -78,7 +83,7 @@ def poemGeneration():
 @app.route('/caption', methods=['POST'])
 def caption():
     data = request.get_json()
-    image = base64.b64decode(data['params']['image'])
+    image = data['params']['file']
     lines = int(data['params']['lines'])
     s = generate_caption_sentence(image, lines)
     return s
