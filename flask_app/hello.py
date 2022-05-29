@@ -76,7 +76,7 @@ def poemGeneration():
     rhyme = data['params']['rhyme']
     lines = int(data['params']['lines'])
     sujet = data['params']['sujet']
-    s = generate_sentence(meter, rhyme, lines, start_with=sujet, max_length=100)
+    s = generate_sentence(meter, rhyme, lines, start_with=sujet, max_length=400)
     return s
 
 
