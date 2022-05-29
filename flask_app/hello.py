@@ -35,10 +35,13 @@ def tachkil():
     for l in line:
         res.append(get_tachkil(l)["predicted"])
 
-    for i in range(len(res) // 2):
-        right = res[i*2].strip()
-        left = res[i*2 + 1].strip()
-        result.append(right+"*"+left)
+    if len(res)%2 == 0:
+        for i in range(len(res) // 2):
+            right = res[i*2].strip()
+            left = res[i*2 + 1].strip()
+            result.append(right+"*"+left)
+    else:
+        result=res
 
     return '\n'.join(result)
 
@@ -48,9 +51,10 @@ def meter():
     data = request.get_json()
     line = data['params']['text']
     res = []  
-    for i in range(len(line) // 2):
+    for i in range(len(line) // 2 if len(line) > 1 else 1):
         right = line[i*2].strip()
-        left = line[i*2 + 1].strip()
+        left = line[i*2 + 1].strip() if i*2 + 1 < len(line) else ""
+        print(right,left)
         res.append(predict_meter(right, left))
 
     return {i: res[i] for i in range(len(res))}
