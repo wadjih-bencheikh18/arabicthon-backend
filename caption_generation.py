@@ -22,33 +22,32 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 spacy_eng = spacy.load("en_core_web_sm")
 
 
-
 class Vocabulary:
-    def __init__(self,freq_threshold):
-        self.itos = {0:"<PAD>",1:"<SOS>",2:"<EOS>",3:"<UNK>"}
-        self.stoi = {v:k for k,v in self.itos.items()}
+    def __init__(self, freq_threshold):
+        self.itos = {0: "<PAD>", 1: "<SOS>", 2: "<EOS>", 3: "<UNK>"}
+        self.stoi = {v: k for k, v in self.itos.items()}
         self.freq_threshold = freq_threshold
-        
-    def __len__(self): 
+
+    def __len__(self):
         return len(self.itos)
-    
+
     @staticmethod
     def tokenize(text):
         return [token.text.lower() for token in spacy_eng.tokenizer(text)]
-    
+
     def build_vocab(self, sentence_list):
         frequencies = Counter()
         idx = 4
         for sentence in sentence_list:
             for word in self.tokenize(sentence):
                 frequencies[word] += 1
-                
-                #add the word to the vocab if it reaches minum frequecy threshold
+
+                # add the word to the vocab if it reaches minum frequecy threshold
                 if frequencies[word] == self.freq_threshold:
                     self.stoi[word] = idx
                     self.itos[idx] = word
                     idx += 1
-    
+
 
 freq_threshold = 5
 captions = pd.read_csv('models/caption/captions.txt')['caption'].to_list()
@@ -56,10 +55,10 @@ vocab = Vocabulary(freq_threshold)
 vocab.build_vocab(captions)
 
 
-#init caption_model
+# init caption_model
 caption_model = EncoderDecoder(
     embed_size=300,
-    vocab_size = len(vocab),
+    vocab_size=len(vocab),
     attention_dim=256,
     encoder_dim=2048,
     decoder_dim=512,
@@ -67,17 +66,18 @@ caption_model = EncoderDecoder(
 ).to(device)
 
 
-caption_model.load_state_dict(torch.load('models/caption/attention_model_state.pt', map_location=device)['state_dict'])
+caption_model.load_state_dict(torch.load(
+    'models/caption/attention_model_state.pt', map_location=device)['state_dict'])
 
 
 transform = T.Compose([
-    T.Resize(226),                     
-    T.ToTensor(),                               
-    T.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+    T.Resize(226),
+    T.ToTensor(),
+    T.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
 ])
 
 
-def generate_caption(url):
+def generate_caption(img):
     """
     Giver a url of an image, we generate its arabic caption
     Input:
@@ -86,26 +86,26 @@ def generate_caption(url):
         ar_caption (str): the arabic caption
     """
 
-    img = Image.open(requests.get(url, stream=True).raw).convert("RGB")
+    # img = Image.open(requests.get(url, stream=True).raw).convert("RGB")
     img = transform(img).unsqueeze(0)
 
     caption_model.eval()
     with torch.no_grad():
         features = caption_model.encoder(img.to(device))
-        caps, _ = caption_model.decoder.generate_caption(features,vocab=vocab)
+        caps, _ = caption_model.decoder.generate_caption(features, vocab=vocab)
         caption = ' '.join(caps[:-2])
         ar_caption = ts.google(caption, from_language='en', to_language='ar')
 
     return ar_caption
 
 
-def generate_caption_sentence(url, max_lines):
-    arabe_caption = generate_caption(url)
-    res = generate_sentence(meter='الكامل', rhyme='ر',
-                        max_lines=max_lines, start_with=arabe_caption)
+def generate_caption_sentence(img, max_lines, rhyme):
+    arabe_caption = generate_caption(img)
+    res = generate_sentence(meter='الكامل', rhyme=rhyme,
+                            max_lines=max_lines, max_length=max_lines*50, start_with=arabe_caption)
     return res
 
-    
-arabe_caption = generate_caption('https://www.preventivevet.com/hubfs/Three%20dogs%20playing%20in%20the%20yard%20600%20canva.jpg')
-res = generate_sentence(meter='الكامل', rhyme='ر', start_with=arabe_caption)
-print(res)
+
+# arabe_caption = generate_caption('https://www.preventivevet.com/hubfs/Three%20dogs%20playing%20in%20the%20yard%20600%20canva.jpg')
+# res = generate_sentence(meter='الكامل', rhyme='ر', start_with=arabe_caption)
+# print(res)

@@ -50,7 +50,7 @@ def get_aroud(text, wazn):
             harakt: ['|O|O||O', '|||O||O', '|||O||O']
 
     """
-
+    orig_h = list(get_harakat(text))
     wazn_h = get_harakat(wazn, space=' ')
     text = text.replace(' ', '')
 
@@ -60,13 +60,15 @@ def get_aroud(text, wazn):
         if wazn_h[i] == ' ':
             S.insert(i, ' ')
             T.insert(i, 14)
+            orig_h.insert(i, ' ')
 
     aroud = rebuild_sentence(S, T)
 
     return {
         'aroud':aroud.split(' '),
         'tafil':wazn.split(' '),
-        'harakt':wazn_h.split(' ')
+        # 'harakt':wazn_h.split(' ')
+        'harakt': ''.join(orig_h).split(' ')
     }
 
 

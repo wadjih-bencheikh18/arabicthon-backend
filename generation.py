@@ -62,13 +62,9 @@ def generate_sentence(meter, rhyme, max_lines=100, max_length=250, start_with=''
         i += 1
         if i == max_lines:
             break
-    
+
     return '\n'.join(res)
 
 
-
-
-
-
-# s = generate_sentence(meter='الكامل', rhyme='ر', start_with='')
+# s = generate_sentence(meter='الكامل', rhyme='ن', start_with='')
 # print(s)

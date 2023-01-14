@@ -1,4 +1,5 @@
-from helper.aroud_helper import get_wazn, get_aroud
+from helper.aroud_helper import get_wazn, get_aroud, get_harakat
+from helper.prosody_postprocessing import normalize, prosody_form
 from tachkil import get_tachkil
 
 
@@ -27,8 +28,12 @@ def get_full_aroud(line, selected_meter=''):
             ratio: 0.6767676767
     """
 
-    out = get_tachkil(line)
-    tachkil, a = out['predicted'], out['aroudi']
+    # out = get_tachkil(line)
+    tachkil=line
+    norm_out = normalize(line)
+    a = prosody_form(norm_out)
+    
+    # tachkil, a = out['predicted'], out['aroudi']
 
     out2 = get_wazn(a, selected_meter=selected_meter)
     meter, wazn, ratio = out2['meter'], out2['wazn'], out2['ratio']
@@ -46,37 +51,46 @@ def get_full_aroud(line, selected_meter=''):
     }
 
 
-poem = """قِف بِالمَنازِلِ إِن شَجَتكَ رُبوعُها
-فَلَعَلَّ عَينَكَ تَستَهِلُّ دُموعُها
-وَاِسأَل عَنِ الأَظعانِ أَينَ سَرَت بِها
-آباؤُها وَمَتى يَكونُ رُجوعُها
-دارٌ لِعَبلَةَ شَطَّ عَنكَ مَزارُها
-وَنَأَت فَفارَقَ مُقلَتَيكَ هُجوعُها
-فَسَقَتكِ يا أَرضَ الشَرَبَّةِ مُزنَةٌ
-مُنهَلَّةٌ يَروي ثَراكِ هُموعُها
-وَكَسا الرَبيعُ رُباكِ مِن أَزهارِهِ
-حُلَلاً إِذا ما الأَرضُ فاحَ رَبيعُها
-كَم لَيلَةٍ عانَقتُ فيها غادَةً
-يَحيا بِها عِندَ المَنامِ ضَجيعُها
-شَمسٌ إِذا طَلَعَت سَجَدتُ جَلالَةً
-لِجَمالِها وَجَلا الظَلامَ طُلوعُها
-يا عَبلَ لا تَخشَي عَلَيَّ مِنَ العِدا
-يَوماً إِذا اِجتَمَعَت عَلَيَّ جُموعُها""".strip().split('\n')
+# poem = """قِف بِالمَنازِلِ إِن شَجَتكَ رُبوعُها
+# فَلَعَلَّ عَينَكَ تَستَهِلُّ دُموعُها
+# وَاِسأَل عَنِ الأَظعانِ أَينَ سَرَت بِها
+# آباؤُها وَمَتى يَكونُ رُجوعُها
+# دارٌ لِعَبلَةَ شَطَّ عَنكَ مَزارُها
+# وَنَأَت فَفارَقَ مُقلَتَيكَ هُجوعُها
+# فَسَقَتكِ يا أَرضَ الشَرَبَّةِ مُزنَةٌ
+# مُنهَلَّةٌ يَروي ثَراكِ هُموعُها
+# وَكَسا الرَبيعُ رُباكِ مِن أَزهارِهِ
+# حُلَلاً إِذا ما الأَرضُ فاحَ رَبيعُها
+# كَم لَيلَةٍ عانَقتُ فيها غادَةً
+# يَحيا بِها عِندَ المَنامِ ضَجيعُها
+# شَمسٌ إِذا طَلَعَت سَجَدتُ جَلالَةً
+# لِجَمالِها وَجَلا الظَلامَ طُلوعُها
+# يا عَبلَ لا تَخشَي عَلَيَّ مِنَ العِدا
+# يَوماً إِذا اِجتَمَعَت عَلَيَّ جُموعُها""".strip().split('\n')
 
 
-for line in poem:
-    out = get_full_aroud(line)
-    meter = out['meter']
-    aroud = out['aroud']
-    tafil = out['tafil']
-    tachkil = out['tachkil']
-    harakat = out['harakat']
+# for line in poem:
+#     out = get_full_aroud(line)
+#     meter = out['meter']
+#     aroud = out['aroud']
+#     tafil = out['tafil']
+#     tachkil = out['tachkil']
+#     harakat = out['harakat']
 
-    print(line)
-    print(meter)
-    print(aroud)
-    print(tafil)
-    print(tachkil)
-    print(harakat)
+#     print(line)
+#     print(meter)
+#     print(aroud)
+#     print(tafil)
+#     print(tachkil)
+#     print(harakat)
 
-    print()
+#     print()
+
+
+a = 'مُسْتَفْعِلُنْ فَاعِلُنْ مُسْتَفْعِلُنْ فَعِلُنْ'
+print(a)
+print(get_full_aroud(a))
+
+b = 'إِنْقُلْتُعُذْ رَنْلَهَا مَاأَبْطَأْتَ سَأَمًا'
+print(b)
+print(get_full_aroud(b))
