@@ -87,10 +87,10 @@ def get_full_aroud(line, selected_meter=''):
 #     print()
 
 
-a = 'مُسْتَفْعِلُنْ فَاعِلُنْ مُسْتَفْعِلُنْ فَعِلُنْ'
-print(a)
-print(get_full_aroud(a))
+# a = 'مُسْتَفْعِلُنْ فَاعِلُنْ مُسْتَفْعِلُنْ فَعِلُنْ'
+# print(a)
+# print(get_full_aroud(a))
 
-b = 'إِنْقُلْتُعُذْ رَنْلَهَا مَاأَبْطَأْتَ سَأَمًا'
-print(b)
-print(get_full_aroud(b))
+# b = 'إِنْقُلْتُعُذْ رَنْلَهَا مَاأَبْطَأْتَ سَأَمًا'
+# print(b)
+# print(get_full_aroud(b))

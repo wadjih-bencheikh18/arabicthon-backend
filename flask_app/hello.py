@@ -9,7 +9,7 @@ from caption_generation import generate_caption_sentence
 from taksim_aroud import get_full_aroud
 from meter_classificaiton import predict_meter
 from tachkil import get_tachkil
-# from flask_cors import CORS
+from flask_cors import CORS
 from flask import Flask, redirect, url_for, request, render_template
 import base64
 import io
@@ -17,7 +17,7 @@ from PIL import Image
 
 
 app = Flask(__name__)
-# CORS(app)
+CORS(app)
 
 # @app.route('/success/<name>')
 # def success(name):
@@ -115,4 +115,4 @@ def lastword():
     return s
 
 if __name__ == '__main__':
-    app.run(debug=True, port=4000)
+    app.run(debug=False, port=4000)
